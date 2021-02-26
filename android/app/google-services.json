@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "675655939067",
+    "project_id": "tul-test-12a71",
+    "storage_bucket": "tul-test-12a71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675655939067:android:b9fad7b1e04e96c5c5515e",
+        "android_client_info": {
+          "package_name": "com.example.tul_shopping_cart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675655939067-ntnvcg8f7721cer1u2dso6vk0ft3opju.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tul_shopping_cart",
+            "certificate_hash": "41b34f65a6806e7c733d71c48458f4aab77ecb00"
+          }
+        },
+        {
+          "client_id": "675655939067-cp3io7fkr5kght5ku2nbl24l2nm68rfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfHj5Fv-BPhqwSeGb0GQFHtYEnaFe_mKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675655939067-cp3io7fkr5kght5ku2nbl24l2nm68rfe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
