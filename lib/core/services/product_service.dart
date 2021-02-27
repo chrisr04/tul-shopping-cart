@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tul_shopping_cart/core/models/product_model.dart';
 
 class ProductService {
 
@@ -9,8 +10,14 @@ class ProductService {
 
   final CollectionReference _products = FirebaseFirestore.instance.collection('products');
 
-  Stream<QuerySnapshot> getProducts(){
-    return _products.snapshots();
+  Future<List<Product>> getProducts() async{
+
+    QuerySnapshot snapshot = await _products.get();
+    if(snapshot.docs.isNotEmpty){
+      List<Product> products = snapshot.docs.map((doc) => Product.fromMap({'id': doc.id, ...doc.data()})).toList();
+      return products;
+    }
+    return [];
   }
   
 }

@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tul_shopping_cart/core/blocs/cart/cart_bloc.dart';
 import 'package:tul_shopping_cart/core/blocs/product/product_bloc.dart';
 import 'package:tul_shopping_cart/core/models/product_model.dart';
 import 'package:tul_shopping_cart/shared/widgets/header_widget.dart';
@@ -17,12 +17,15 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
 
   ProductBloc _productBloc;
+  CartBloc _cartBloc;
   Size _screenSize;
 
   @override
   void initState() {
     _productBloc = BlocProvider.of<ProductBloc>(context);
+    _cartBloc = BlocProvider.of<CartBloc>(context);
     _productBloc.add(OnLoadProducts());
+    _cartBloc.add(OnCreateCart());
     super.initState();
   }
 
@@ -32,6 +35,7 @@ class _HomeViewState extends State<HomeView> {
     _screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: _init(),
     );
   }
@@ -42,7 +46,7 @@ class _HomeViewState extends State<HomeView> {
         if(state.isLoaded){
           return Stack(
             children: [
-              _body(state.productsStream),
+              _productGrid(state.products),
               Header(),
             ],
           );
@@ -53,24 +57,9 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _body(Stream<QuerySnapshot> getProducts){
-    return StreamBuilder<QuerySnapshot>(
-      stream: getProducts,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-        if(snapshot.hasData){
-          List<QueryDocumentSnapshot> docs = snapshot.data.docs;
-          List<Product> products = docs.map((doc) => Product.fromMap(doc.data())).toList();
-          return _productList(products);
-        }else{
-          return _loader();
-        }
-      },
-    );
-  }
-
-  Widget _productList(List<Product> products){
+  Widget _productGrid(List<Product> products){
     return Container(
-      margin: EdgeInsets.only(top: _screenSize.height * 0.20),
+      margin: EdgeInsets.only(top: _screenSize.height * 0.13),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -84,15 +73,7 @@ class _HomeViewState extends State<HomeView> {
         itemCount: products.length,
         itemBuilder: (BuildContext context, int index){
 
-          return ProductCard(
-            product: products[index],
-            onAddCart: (){
-
-            },
-            onshowDetails: (){
-
-            },
-          );
+          return ProductCard(product: products[index]);
         },
       ),
     );

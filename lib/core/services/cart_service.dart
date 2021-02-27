@@ -10,13 +10,22 @@ class CartService {
   
   final CollectionReference _carts = FirebaseFirestore.instance.collection('carts');
 
-  Future<Cart> addCart() async{
-    DocumentReference doc = _carts.doc();
-    await  doc.set({
-      'id': doc.id,
-      'status': 'pending'
-    });
-    return Cart(id: doc.id);
+  Future<Cart> createCart() async{
+
+    QuerySnapshot snapshot = await _carts.where('status', isEqualTo: 'pending').limit(1).get();
+    
+    if(snapshot.docs.isNotEmpty){
+      QueryDocumentSnapshot doc = snapshot.docs.first;
+      return Cart.fromMap(doc.data());
+    }else{
+
+      DocumentReference doc = _carts.doc();
+      await  doc.set({
+        'id': doc.id,
+        'status': 'pending'
+      });
+      return Cart(id: doc.id);
+    }
   }
 
   Future<Cart> completeCart(Cart cart) async{

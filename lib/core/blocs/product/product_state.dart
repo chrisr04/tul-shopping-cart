@@ -3,18 +3,18 @@ part of 'product_bloc.dart';
 @immutable
 class ProductState {
 
-  final Stream<QuerySnapshot> productsStream;
+  final List<Product> products;
   final bool isLoaded;
 
   ProductState({
-    Stream<QuerySnapshot> productsStream,
-  }): this.productsStream = productsStream?? null,
-      this.isLoaded = (productsStream != null)? true : false;
+    List<Product> products,
+  }): this.products = products?? [],
+      this.isLoaded = (products !=null)? true : false;
 
   ProductState copyWith({
-    Stream<QuerySnapshot> productsStream
+    List<Product> products
   }) => ProductState(
-    productsStream: productsStream?? this.productsStream
+    products: products?? this.products
   );
 }
 

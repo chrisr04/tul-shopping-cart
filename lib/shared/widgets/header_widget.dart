@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tul_shopping_cart/shared/widgets/searchbox_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tul_shopping_cart/core/blocs/cart/cart_bloc.dart';
 
 class Header extends StatelessWidget {
   const Header({Key key}) : super(key: key);
@@ -12,8 +13,7 @@ class Header extends StatelessWidget {
     return Stack(
       children: [
         _background(screenSize),
-        _title(screenSize),
-        _searchBox()
+        _title(screenSize)
       ],
     );
   }
@@ -21,7 +21,7 @@ class Header extends StatelessWidget {
   Widget _background(Size screenSize){
     return Container(
       width: screenSize.width,
-      height: screenSize.height * 0.22,
+      height: screenSize.height * 0.18,
       margin: EdgeInsets.only(bottom:20.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(35.0)),
@@ -37,7 +37,7 @@ class Header extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Colors.teal[600],
-            Colors.lightGreen[300],
+            Colors.lightGreen[300]
           ]
         )
       ),
@@ -46,7 +46,7 @@ class Header extends StatelessWidget {
 
   Widget _title(Size screenSize){
     return Positioned(
-      top: screenSize.height * 0.1,
+      top: screenSize.height * 0.09,
       left: 0.0,
       right: 0.0,
       child: Container(
@@ -55,20 +55,42 @@ class Header extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Shopping Cart', style: TextStyle(color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.bold)),
-            Icon(Icons.shopping_cart_outlined, size: 30.0, color: Colors.white)
+            _iconCartBtn()
           ],
         ),
       ),
     );
   }
 
-  Widget _searchBox(){
-
-    return Positioned(
-      bottom: 0.0,
-      left: 0.0,
-      right: 0.0,
-      child: SearchBox()
+  Widget _iconCartBtn(){
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        int length = state.products.length;
+        return GestureDetector(
+          child: Stack(
+            overflow: Overflow.visible,
+            children: [
+              Icon(Icons.shopping_cart_outlined, size: 30.0, color: Colors.white),
+              Positioned(
+                top: -10.0,
+                right: -10.0,
+                child: (length > 0)? Container(
+                  width: 23.0,
+                  height: 23.0,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(50.0)
+                  ),
+                  child: Center(child: Text('${state.products.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
+                ) : Container()
+              ) 
+            ],
+          ),
+          onTap: (){
+            Navigator.of(context).pushNamed('cart');
+          },
+        );
+      },
     );
   }
 }
