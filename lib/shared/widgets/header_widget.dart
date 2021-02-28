@@ -65,7 +65,7 @@ class Header extends StatelessWidget {
   Widget _iconCartBtn(){
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
-        int length = state.products.length;
+        int length = state.productsCart.length;
         return GestureDetector(
           child: Stack(
             overflow: Overflow.visible,
@@ -81,7 +81,7 @@ class Header extends StatelessWidget {
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(50.0)
                   ),
-                  child: Center(child: Text('${state.products.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
+                  child: Center(child: Text('$length', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
                 ) : Container()
               ) 
             ],

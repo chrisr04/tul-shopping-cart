@@ -20,7 +20,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(CartState());
 
   bool isAdded(String productId){
-    List<ProductCart> list = state.products.where((p) => p.productId == productId).toList();
+    List<ProductCart> list = state.productsCart.where((p) => p.productId == productId).toList();
     if(list.length == 1){
       return true;
     }
@@ -63,51 +63,50 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Stream<CartState> _onInitCart() async* {
     try {
       Cart newCart = await _cartService.initCart();
-      List<ProductCart> products = await _readLocalData();
-      yield state.copyWith(cart: newCart, products: products);
+      List<ProductCart> productsCart = await _readLocalData();
+      yield state.copyWith(cart: newCart, productsCart: productsCart);
     } catch (e) {
       throw e;
     }
   }
 
   Stream<CartState> _onAddProductCart(OnAddProductCart event) async* {
-
-    List<ProductCart> products = [...state.products, event.product];
+    List<ProductCart> products = [...state.productsCart, event.productCart];
     await _saveLocalData(products);
-    yield state.copyWith(products: products);
+    yield state.copyWith(productsCart: products);
   }
 
   Stream<CartState> _onIncrementProductQuantity(OnIncrementProductQuantity event) async* {
-    ProductCart product = state.products[event.index];
+    ProductCart product = state.productsCart[event.index];
     product = product.copyWith(quantity: product.quantity + 1);
-    List<ProductCart> newProductList = state.products;
+    List<ProductCart> newProductList = state.productsCart;
     newProductList[event.index] = product;
     await _saveLocalData(newProductList);
-    yield state.copyWith(products: newProductList);
+    yield state.copyWith(productsCart: newProductList);
   }
 
   Stream<CartState> _onDecrementProductQuantity(OnDecrementProductQuantity event) async* {
-    ProductCart product = state.products[event.index];
+    ProductCart product = state.productsCart[event.index];
     product = product.copyWith(quantity: product.quantity - 1);
     if(product.quantity > 0){
-      List<ProductCart> newProductList = state.products;
+      List<ProductCart> newProductList = state.productsCart;
       newProductList[event.index] = product;
       await _saveLocalData(newProductList);
-      yield state.copyWith(products: newProductList);
+      yield state.copyWith(productsCart: newProductList);
     }
   }
  
   Stream<CartState> _onDeleteProduct(OnDeleteProduct event) async* {
-    List<ProductCart> newProductList = state.products.where((p) => p.productId != event.productCart.productId).toList();
+    List<ProductCart> newProductList = state.productsCart.where((pc) => pc.productId != event.productId).toList();
     await _saveLocalData(newProductList);
-    yield state.copyWith(products: newProductList);
+    yield state.copyWith(productsCart: newProductList);
   }
 
   Stream<CartState> _onCompleteCart() async* {
     yield state.copyWith(isLoading: true);
     try {
       await _cartService.completeCart(state.cart);
-      await _productCartsService.addProductCart(state.products);
+      await _productCartsService.addProductCart(state.productsCart);
       await _localStorageService.remove('tul_shopping_cart');
       yield CartState.complete();
       add(OnInitCart());

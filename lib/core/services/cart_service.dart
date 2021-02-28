@@ -34,5 +34,14 @@ class CartService {
       'status': 'completed'
     }, SetOptions(merge: true));
   }
+
+  Future<List<Cart>> getCompletedCarts() async{
+    QuerySnapshot snapshot = await _carts.where('status', isEqualTo: 'completed').get();
+    if(snapshot.docs.isNotEmpty){
+      List<Cart> cartsCompleted = snapshot.docs.map((doc) => Cart.fromMap(doc.data())).toList();
+      return cartsCompleted;
+    }
+    return [];
+  }
   
 }

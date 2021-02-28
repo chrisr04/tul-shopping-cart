@@ -1,6 +1,22 @@
 part of 'order_bloc.dart';
 
 @immutable
-abstract class OrderState {}
+class OrderState {
 
-class OrderInitial extends OrderState {}
+  final List<Order> orders;
+  final bool exist;
+
+  OrderState({
+    List<Order> orders,
+  }): this.orders = orders?? [],
+      this.exist = (orders != null)? true : false;
+
+  OrderState copyWith({
+    List<Order> orders,
+    bool isLoading
+  }) => OrderState(
+    orders: orders?? this.orders
+  );
+
+}
+

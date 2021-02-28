@@ -6,8 +6,8 @@ abstract class CartEvent {}
 class OnInitCart extends CartEvent { }
 
 class OnAddProductCart extends CartEvent { 
-  final ProductCart product;
-  OnAddProductCart(this.product);
+  final ProductCart productCart;
+  OnAddProductCart(this.productCart);
 }
 
 class OnIncrementProductQuantity extends CartEvent {
@@ -21,8 +21,8 @@ class OnDecrementProductQuantity extends CartEvent {
 }
 
 class OnDeleteProduct extends CartEvent {
-  final ProductCart productCart;
-  OnDeleteProduct(this.productCart);
+  final String productId;
+  OnDeleteProduct(this.productId);
 }
 
 class OnCompleteCart extends CartEvent { }

@@ -5,6 +5,7 @@ import 'package:tul_shopping_cart/core/blocs/product/product_bloc.dart';
 import 'package:tul_shopping_cart/core/models/product_cart_model.dart';
 import 'package:tul_shopping_cart/core/models/product_model.dart';
 import 'package:tul_shopping_cart/shared/helpers/alert_helper.dart';
+import 'package:tul_shopping_cart/shared/widgets/loader_widget.dart';
 
 class CartView extends StatefulWidget {
   CartView({Key key}) : super(key: key);
@@ -15,13 +16,13 @@ class CartView extends StatefulWidget {
 
 class _CartViewState extends State<CartView> {
 
-  ProductBloc _productBloc;
   CartBloc _cartBloc;
+  ProductBloc _productBloc;
 
   @override
   void initState() {
-    _productBloc = BlocProvider.of<ProductBloc>(context);
     _cartBloc = BlocProvider.of<CartBloc>(context);
+    _productBloc = BlocProvider.of<ProductBloc>(context);
     super.initState();
   }
 
@@ -44,7 +45,7 @@ class _CartViewState extends State<CartView> {
       listener: (context, state) {
 
         if(state.isLoading){
-          showLoadingAlert(context);
+          showOrderLoadingAlert(context);
         }
 
         if(state.isCompleted){
@@ -55,8 +56,8 @@ class _CartViewState extends State<CartView> {
       },
       child: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
-          if(state.products.isNotEmpty){
-            return _body(state.products);
+          if(state.productsCart.isNotEmpty){
+            return _body(state.productsCart);
           }else{
             return _cartEmpty();
           }
@@ -66,7 +67,7 @@ class _CartViewState extends State<CartView> {
 
   }
 
-  Widget _body(List<ProductCart> productCarts){
+  Widget _body(List<ProductCart> productsCart){
 
     return Container(
       width: double.infinity,
@@ -76,7 +77,7 @@ class _CartViewState extends State<CartView> {
         mainAxisSize: MainAxisSize.max,
         children: [
           _title(),
-          _table(productCarts),
+          _table(productsCart),
           _orderBtn()
         ],
       ),
@@ -90,32 +91,49 @@ class _CartViewState extends State<CartView> {
     ); 
   }
 
-  Widget _table(List<ProductCart> productCarts){
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Table( 
-          columnWidths: {
-            0: FixedColumnWidth(250),
-          },
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          defaultColumnWidth: FlexColumnWidth(),
-          children: _productRows(productCarts)
-        ),
-      ),
+  Widget _table(List<ProductCart> productsCart){
+
+    List<String> productIds = productsCart.map((pc) => pc.productId).toList();
+
+    return FutureBuilder(
+      future: _productBloc.getProducts(productIds),
+      builder: (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
+
+        if(snapshot.hasData){
+
+          List<Product> products = snapshot.data;
+          
+          return Expanded(
+            child: SingleChildScrollView(
+              child: Table( 
+                columnWidths: {
+                  0: FixedColumnWidth(250),
+                },
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                defaultColumnWidth: FlexColumnWidth(),
+                children: _productRows(products, productsCart)
+              ),
+            ),
+          );
+
+        }else{
+          return _loader();
+        }
+      },
     );
+
+
   }
 
-  List<TableRow> _productRows(List<ProductCart> productCarts){
+  List<TableRow> _productRows(List<Product> products, List<ProductCart> productsCart){
     List<TableRow> rows = [];
-    for (int i = 0; i < productCarts.length; i++) {
-      rows.add(_productItem(i, productCarts[i]));
+    for (int i = 0; i < productsCart.length; i++) {
+      rows.add(_productItem(i, products[i], productsCart[i]));
     }
     return rows;
   }
 
-  TableRow _productItem(int index, ProductCart productCart){
-
-    Product product = _productBloc.getProduct(productCart.productId);
+  TableRow _productItem(int index, Product product, ProductCart productCart){
 
     return TableRow(
       children: [  
@@ -166,7 +184,7 @@ class _CartViewState extends State<CartView> {
                   color: Colors.red[700],
                   child: Text('Quitar', style: TextStyle(color: Colors.white)),
                   onPressed: (){
-                    _cartBloc.add(OnDeleteProduct(productCart));
+                    _cartBloc.add(OnDeleteProduct(productCart.productId));
                   }
                 ),
               )
@@ -206,6 +224,18 @@ class _CartViewState extends State<CartView> {
           Text('No hay productos en el carrito', style: TextStyle(color: Colors.grey[600], fontSize: 20.0, fontWeight: FontWeight.bold))
         ],
       )
+    );
+  }
+
+  Widget _loader(){
+    return Expanded(
+      child: Center(
+        child: Loader(
+          size: 35.0,
+          primaryColor: Colors.teal[600],
+          secondaryColor: Colors.white,
+        ),
+      ),
     );
   }
 }

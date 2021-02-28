@@ -44,12 +44,6 @@ class ProductCard extends StatelessWidget {
 
           bool isAdded = _cartBloc.isAdded(product.id);
 
-          ProductCart productCart =  ProductCart(
-            productId: product.id,
-            cartId: state.cart.id,
-            quantity: 1
-          );
-
           return (!isAdded)? Container(
             width: double.infinity,
             child: RaisedButton(
@@ -64,6 +58,13 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
               onPressed:  (){
+
+                ProductCart productCart =  ProductCart(
+                  productId: product.id,
+                  cartId: state.cart.id,
+                  quantity: 1
+                );
+                
                 _cartBloc.add(OnAddProductCart(productCart));
               }
             )
@@ -81,7 +82,7 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
               onPressed:  (){
-                _cartBloc.add(OnDeleteProduct(productCart));
+                _cartBloc.add(OnDeleteProduct(product.id));
               }
             )
           );

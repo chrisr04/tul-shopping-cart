@@ -20,4 +20,13 @@ class ProductCartsService {
     return batch.commit();
   }
 
+  Future<List<ProductCart>> getProductsCart(String cartId) async{
+    QuerySnapshot snapshot = await _productCarts.where('cart_id', isEqualTo: cartId).get();
+    if(snapshot.docs.isNotEmpty){
+      List<ProductCart> productsCart = snapshot.docs.map((doc) => ProductCart.fromMap(doc.data())).toList();
+      return productsCart;
+    }
+    return [];
+  }
+
 }

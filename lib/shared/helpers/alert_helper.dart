@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tul_shopping_cart/shared/widgets/loader_widget.dart';
 
-void showLoadingAlert(BuildContext context){
+void showOrderLoadingAlert(BuildContext context){
 
   showDialog(
     context: context,

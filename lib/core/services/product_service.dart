@@ -11,10 +11,18 @@ class ProductService {
   final CollectionReference _products = FirebaseFirestore.instance.collection('products');
 
   Future<List<Product>> getProducts() async{
-
     QuerySnapshot snapshot = await _products.get();
     if(snapshot.docs.isNotEmpty){
       List<Product> products = snapshot.docs.map((doc) => Product.fromMap({'id': doc.id, ...doc.data()})).toList();
+      return products;
+    }
+    return [];
+  }
+
+  Future getManyProducts(List<String> producIds) async{
+    QuerySnapshot snapshot = await _products.where('id', whereIn: producIds).orderBy('name').get();
+    if(snapshot.docs.isNotEmpty){
+      List<Product> products = snapshot.docs.map((doc) => Product.fromMap(doc.data())).toList();
       return products;
     }
     return [];
