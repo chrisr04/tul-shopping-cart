@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tul_shopping_cart/core/blocs/cart/cart_bloc.dart';
 import 'package:tul_shopping_cart/core/models/product_cart_model.dart';
 import 'package:tul_shopping_cart/core/models/product_model.dart';
+import 'package:tul_shopping_cart/shared/helpers/alert_helper.dart';
 
 class ProductCard extends StatelessWidget {
 
@@ -23,6 +24,7 @@ class ProductCard extends StatelessWidget {
             Text(product.name, textAlign: TextAlign.start,  maxLines: 3, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.teal[600], fontSize: 20.0, fontWeight: FontWeight.bold)),
             SizedBox(height: 5.0),
             Text(product.description, textAlign: TextAlign.start, overflow: TextOverflow.ellipsis, maxLines: 4, style: TextStyle(color: Colors.grey[600])),
+            SizedBox(height: 5.0),
             _addCartBtn(context),
             _showDetailsBtn(context)
           ],
@@ -73,7 +75,7 @@ class ProductCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.remove_shopping_cart_rounded, color: Colors.white),
+                  Icon(Icons.remove_circle_outline_rounded, color: Colors.white),
                   SizedBox(width: 5.0),
                   Text('Quitar', style: TextStyle(color: Colors.white),)
                 ],
@@ -111,25 +113,7 @@ class ProductCard extends StatelessWidget {
           ],
         ),
         onPressed: (){
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text('Descripción del producto'),
-              content: Container(
-                child: Text(product.description),
-              ),
-              actions: [
-                RaisedButton(
-                  shape: StadiumBorder(),
-                  color: Colors.teal[600],
-                  child: Text('Cerrar', style: TextStyle(color:  Colors.white)),
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  }
-                )
-              ],
-            ),
-          );
+          showProductDetailAlert(context, product.description);
         }
       ),
     );

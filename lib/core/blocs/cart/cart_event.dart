@@ -3,7 +3,7 @@ part of 'cart_bloc.dart';
 @immutable
 abstract class CartEvent {}
 
-class OnCreateCart extends CartEvent { }
+class OnInitCart extends CartEvent { }
 
 class OnAddProductCart extends CartEvent { 
   final ProductCart product;
@@ -11,13 +11,13 @@ class OnAddProductCart extends CartEvent {
 }
 
 class OnIncrementProductQuantity extends CartEvent {
-  final ProductCart productCart;
-  OnIncrementProductQuantity(this.productCart);
+  final int index;
+  OnIncrementProductQuantity(this.index);
 }
 
 class OnDecrementProductQuantity extends CartEvent {
-  final ProductCart productCart;
-  OnDecrementProductQuantity(this.productCart);
+  final int index;
+  OnDecrementProductQuantity(this.index);
 }
 
 class OnDeleteProduct extends CartEvent {
@@ -25,7 +25,4 @@ class OnDeleteProduct extends CartEvent {
   OnDeleteProduct(this.productCart);
 }
 
-class OnCompleteCart extends CartEvent { 
-  final Cart cart;
-  OnCompleteCart(this.cart);
-}
+class OnCompleteCart extends CartEvent { }

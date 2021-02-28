@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tul_shopping_cart/views/cart_view.dart';
 import 'package:tul_shopping_cart/views/home_view.dart';
+import 'package:tul_shopping_cart/views/orders_view.dart';
 
 Map<String, WidgetBuilder> getRoutes(RouteSettings settings){
 
@@ -8,7 +9,8 @@ Map<String, WidgetBuilder> getRoutes(RouteSettings settings){
 
   return {
     'home': (BuildContext context) => HomeView(),
-    'cart': (BuildContext context) => CartView()
+    'cart': (BuildContext context) => CartView(),
+    'orders': (BuildContext context) => OrdersView()
   };
 }
 

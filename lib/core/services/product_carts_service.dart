@@ -8,33 +8,16 @@ class ProductCartsService {
 
   factory ProductCartsService() => _instance;
 
-  CollectionReference _productCarts = FirebaseFirestore.instance.collection('product_carts');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final CollectionReference _productCarts = FirebaseFirestore.instance.collection('product_carts');
 
-  Future<ProductCart> addProductCart(ProductCart productCart) async{
-    DocumentReference doc = _productCarts.doc();
-    await doc.set(productCart.toMap());
-    return productCart.copyWith(id: doc.id);
-  }
-
-  Future<List<ProductCart>> getProducts(String cartId) async{
-    QuerySnapshot snapshot = await _productCarts.where('cart_id', isEqualTo: cartId).get();
-    if(snapshot.docs.isNotEmpty){
-      List<ProductCart> products = snapshot.docs.map((doc) => ProductCart.fromMap({'id': doc.id, ...doc.data()})).toList();
-      return products;
+  Future<void> addProductCart(List<ProductCart> productsCart) async{
+    WriteBatch batch = _firestore.batch();
+    for (ProductCart product in productsCart) {
+      DocumentReference doc = _productCarts.doc();
+      batch.set(doc, product.toMap());
     }
-    return [];
-  }
-
-  Future<void> updateQuantity(ProductCart productCart) async{
-    DocumentReference doc = _productCarts.doc(productCart.id);
-    return doc.set({
-      'quantity': productCart.quantity
-    }, SetOptions(merge: true));
-  }
-
-  Future<void> deleteProductCart(ProductCart productCart) async{
-     DocumentReference doc = _productCarts.doc(productCart.id);
-     return doc.delete();
+    return batch.commit();
   }
 
 }

@@ -10,7 +10,7 @@ class CartService {
   
   final CollectionReference _carts = FirebaseFirestore.instance.collection('carts');
 
-  Future<Cart> createCart() async{
+  Future<Cart> initCart() async{
 
     QuerySnapshot snapshot = await _carts.where('status', isEqualTo: 'pending').limit(1).get();
     
@@ -28,12 +28,11 @@ class CartService {
     }
   }
 
-  Future<Cart> completeCart(Cart cart) async{
+  Future<void> completeCart(Cart cart) async{
     DocumentReference doc = _carts.doc(cart.id);
     await  doc.set({
-      'status': 'complete'
-    });
-    return cart.copyWith(status: 'complete');
+      'status': 'completed'
+    }, SetOptions(merge: true));
   }
   
 }

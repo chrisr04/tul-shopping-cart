@@ -10,9 +10,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc() : super(OrderInitial());
 
   @override
-  Stream<OrderState> mapEventToState(
-    OrderEvent event,
-  ) async* {
-    // TODO: implement mapEventToState
+  Stream<OrderState> mapEventToState(OrderEvent event) async* {
+
   }
 }

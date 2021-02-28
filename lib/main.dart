@@ -1,9 +1,9 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tul_shopping_cart/core/blocs/cart/cart_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:tul_shopping_cart/core/blocs/order/order_bloc.dart';
 import 'package:tul_shopping_cart/core/blocs/product/product_bloc.dart';
+import 'package:tul_shopping_cart/core/blocs/cart/cart_bloc.dart';
 import 'package:tul_shopping_cart/routes.dart';
  
 void main() async{
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Shopping Carts',
+        title: 'Shopping Cart',
         initialRoute: 'home',
         onGenerateRoute: generateRoutes
       ),

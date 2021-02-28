@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tul_shopping_cart/core/blocs/cart/cart_bloc.dart';
 import 'package:tul_shopping_cart/core/blocs/product/product_bloc.dart';
-import 'package:tul_shopping_cart/core/models/product_model.dart';
 import 'package:tul_shopping_cart/shared/widgets/header_widget.dart';
 import 'package:tul_shopping_cart/shared/widgets/loader_widget.dart';
-import 'package:tul_shopping_cart/shared/widgets/product_card_widget.dart';
+import 'package:tul_shopping_cart/shared/widgets/product_grid_widget.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({Key key}) : super(key: key);
@@ -18,22 +17,19 @@ class _HomeViewState extends State<HomeView> {
 
   ProductBloc _productBloc;
   CartBloc _cartBloc;
-  Size _screenSize;
+
 
   @override
   void initState() {
     _productBloc = BlocProvider.of<ProductBloc>(context);
     _cartBloc = BlocProvider.of<CartBloc>(context);
     _productBloc.add(OnLoadProducts());
-    _cartBloc.add(OnCreateCart());
+    _cartBloc.add(OnInitCart());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    _screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: _init(),
@@ -46,7 +42,9 @@ class _HomeViewState extends State<HomeView> {
         if(state.isLoaded){
           return Stack(
             children: [
-              _productGrid(state.products),
+              ProductGrid(
+                products: state.products
+              ),
               Header(),
             ],
           );
@@ -54,28 +52,6 @@ class _HomeViewState extends State<HomeView> {
           return _loader();
         }
       },
-    );
-  }
-
-  Widget _productGrid(List<Product> products){
-    return Container(
-      margin: EdgeInsets.only(top: _screenSize.height * 0.13),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.8,
-          crossAxisSpacing: 5.0,
-          mainAxisSpacing: 5.0
-        ),
-        shrinkWrap: true,
-        padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 60.0, bottom: 80.0),
-        scrollDirection: Axis.vertical,
-        itemCount: products.length,
-        itemBuilder: (BuildContext context, int index){
-
-          return ProductCard(product: products[index]);
-        },
-      ),
     );
   }
 
