@@ -4,11 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tul_shopping_cart/core/models/cart_model.dart';
 import 'package:tul_shopping_cart/core/models/product_cart_model.dart';
-import 'package:tul_shopping_cart/core/models/product_model.dart';
 import 'package:tul_shopping_cart/core/services/cart_service.dart';
 import 'package:tul_shopping_cart/core/services/product_carts_service.dart';
 import 'package:tul_shopping_cart/core/services/local_storage_service.dart';
-import 'package:tul_shopping_cart/core/services/product_service.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -16,7 +14,6 @@ part 'cart_state.dart';
 class CartBloc extends Bloc<CartEvent, CartState> {
 
   CartService _cartService = CartService();
-  ProductService _productService = ProductService();
   ProductCartsService _productCartsService = ProductCartsService();
   LocalStorageService _localStorageService = LocalStorageService();
 
@@ -30,24 +27,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     return false;
   }
 
-  Future<List<Product>> getProducts() async{
-    List<String> ids = state.productsCart.map((pc) => pc.productId).toList();
-    if(ids.isNotEmpty){
-      List<Product> products = await _productService.getProductsByIds(ids);
-      return products;
-    }
-    return [];
-  }
-
   Future<void> _saveLocalData(List<ProductCart> products) async{
-    List<Map<String, dynamic>> localData = products.map((p) => p.toMap()).toList();
+    List<Map<String, dynamic>> localData = products.map((p) => p.toJson()).toList();
     await _localStorageService.save('tul_shopping_cart', localData);
   }
 
   Future<List<ProductCart>> _readLocalData() async{
     final List<dynamic> localData = await _localStorageService.read('tul_shopping_cart');
     if(localData != null){
-      List<ProductCart> products = localData.cast<Map<String, dynamic>>().map((p) => ProductCart.fromMap(p)).toList();
+      List<ProductCart> products = localData.cast<Map<String, dynamic>>().map((p) => ProductCart.fromJson(p)).toList();
       return products;
     }
     return null;

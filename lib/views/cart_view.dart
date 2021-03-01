@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tul_shopping_cart/core/blocs/cart/cart_bloc.dart';
 import 'package:tul_shopping_cart/core/models/product_cart_model.dart';
-import 'package:tul_shopping_cart/core/models/product_model.dart';
 import 'package:tul_shopping_cart/shared/helpers/alert_helper.dart';
-import 'package:tul_shopping_cart/shared/widgets/loader_widget.dart';
 
 class CartView extends StatefulWidget {
   CartView({Key key}) : super(key: key);
@@ -16,7 +14,6 @@ class CartView extends StatefulWidget {
 class _CartViewState extends State<CartView> {
 
   CartBloc _cartBloc;
-  List<Product> _products;
   List<ProductCart> _productsCart;
 
   @override
@@ -34,52 +31,35 @@ class _CartViewState extends State<CartView> {
         backgroundColor: Colors.teal[600]
       ),
       body: _init()
-
     );
   }
 
   Widget _init(){
 
-    return FutureBuilder(
-      future: _cartBloc.getProducts(),
-      builder: (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
+    return BlocListener<CartBloc, CartState>(
+      listener: (context, state) {
 
-        if(snapshot.hasData){
-
-          _products = snapshot.data;
-
-          return BlocListener<CartBloc, CartState>(
-            listener: (context, state) {
-
-              if(state.isLoading){
-                showOrderLoadingAlert(context);
-              }
-
-              if(state.isCompleted){
-                Navigator.of(context).pop();
-                showOrderSuccessAlert(context);
-              }
-              
-            },
-            child: BlocBuilder<CartBloc, CartState>(
-              builder: (context, state) {
-                if(state.productsCart.isNotEmpty){
-                  _productsCart = state.productsCart;
-                  return _body();
-                }else{
-                  return _cartEmpty();
-                }
-              },
-            ),
-          );
-
-        }else{
-          return _loader();
+        if(state.isLoading){
+          showOrderLoadingAlert(context);
         }
+
+        if(state.isCompleted){
+          Navigator.of(context).pop();
+          showOrderSuccessAlert(context);
+        }
+        
       },
+      child: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if(state.productsCart.isNotEmpty){
+            _productsCart = state.productsCart;
+            return _body();
+          }else{
+            return _cartEmpty();
+          }
+        },
+      ),
     );
-
-
   }
 
   Widget _body(){
@@ -101,7 +81,7 @@ class _CartViewState extends State<CartView> {
 
   Widget _title(){
     return Container(
-      margin: EdgeInsets.only(left: 15.0),
+      margin: EdgeInsets.only(left: 15.0, bottom: 10.0),
       child: Text('Productos', style: TextStyle(fontSize: 20.0, color: Colors.grey[800], fontWeight: FontWeight.bold))
     ); 
   }
@@ -126,20 +106,20 @@ class _CartViewState extends State<CartView> {
   List<TableRow> _productTableRows(){
     List<TableRow> rows = [];
     for (int i = 0; i < _productsCart.length; i++) {
-      Product product = _products.firstWhere((p) => p.id == _productsCart[i].productId); 
-      rows.add(_productTableRow(i, product.name, _productsCart[i]));
+
+      rows.add(_productTableRow(i, _productsCart[i]));
     }
     return rows;
   }
 
-  TableRow _productTableRow(int index, String productName, ProductCart productCart){
+  TableRow _productTableRow(int index, ProductCart productCart){
 
     return TableRow(
       children: [  
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15.0),
           child: Center(
-            child: Text(productName, style: TextStyle(fontSize: 17.0))
+            child: Text(productCart.name, style: TextStyle(fontSize: 17.0))
           )
         ),  
         Container(
@@ -199,7 +179,7 @@ class _CartViewState extends State<CartView> {
       child: Container(
         width: 250.0,
         height: 40.0,
-        margin: EdgeInsets.only(bottom: 20.0),
+        margin: EdgeInsets.symmetric(vertical: 15.0),
         child: RaisedButton(
           color: Colors.teal[600],
           shape: StadiumBorder(),
@@ -223,18 +203,6 @@ class _CartViewState extends State<CartView> {
           Text('No hay productos en el carrito', style: TextStyle(color: Colors.grey[600], fontSize: 20.0, fontWeight: FontWeight.bold))
         ],
       )
-    );
-  }
-
-  Widget _loader(){
-    return Container(
-      child: Center(
-        child: Loader(
-          size: 35.0,
-          primaryColor: Colors.teal[600],
-          secondaryColor: Colors.white,
-        ),
-      ),
     );
   }
 }

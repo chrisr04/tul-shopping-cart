@@ -21,6 +21,18 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   OrderBloc() : super(OrderState());
 
+  Future<List<Product>> _getProductsOrder(List<String> ids) async{
+    List<Product> products = [];
+    if(ids.isNotEmpty){
+      for (String id in ids) {  
+        Product product = await _productService.getProductById(id);
+        products.add(product);
+      }
+      return products;
+    }
+    return [];
+  }
+
   @override
   Stream<OrderState> mapEventToState(OrderEvent event) async* {
     if(event is OnInitOrders){
@@ -45,7 +57,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       List<Order> orders = state.orders;
       List<ProductCart> productCarts = await _productCartsService.getProductsCart(orders[event.index].cartId);
       List<String> ids = productCarts.map((p) => p.productId).toList();
-      List<Product> products = await _productService.getProductsByIds(ids);
+      List<Product> products = await _getProductsOrder(ids);
       List<Map<String, dynamic>> records = [];
       for (int i = 0; i < products.length; i++) {
         final productCart = productCarts.firstWhere((pc) => pc.productId == products[i].id);

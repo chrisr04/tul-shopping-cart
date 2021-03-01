@@ -60,6 +60,7 @@ class ProductCard extends StatelessWidget {
               onPressed:  (){
 
                 ProductCart productCart =  ProductCart(
+                  name: product.name,
                   productId: product.id,
                   cartId: state.cart.id,
                   quantity: 1

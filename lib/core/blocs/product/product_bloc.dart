@@ -14,12 +14,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   ProductBloc() : super(ProductState());
 
-
-  Future<List<Product>> getProducts(List<String> ids) async{
-    List<Product> products = await _productService.getProductsByIds(ids);
-    return products;
-  }
-
   @override
   Stream<ProductState> mapEventToState(ProductEvent event) async* {
     if(event is OnLoadProducts){

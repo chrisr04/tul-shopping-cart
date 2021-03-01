@@ -15,6 +15,7 @@ class _MyOrderViewState extends State<MyOrdersView> {
 
   OrderBloc _orderBloc;
   bool _reverseList = false;
+  List<Order> _orders = [];
 
   @override
   void initState() {
@@ -39,26 +40,11 @@ class _MyOrderViewState extends State<MyOrdersView> {
         if(state.exist){
 
           if(state.orders.isNotEmpty){
+            _orders = state.orders;
             return Column(
               children: [
-                Container(
-                  margin: EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Mis pedidos', style: TextStyle(color: Colors.black, fontSize: 25.0, fontWeight: FontWeight.bold)),
-                      IconButton(
-                          icon: Icon(Icons.filter_list_outlined, color: Colors.teal[600]),
-                          onPressed: (){
-                            setState(() {
-                              _reverseList = !_reverseList;
-                            });
-                          }
-                        )
-                    ],
-                  ), 
-                ),
-                _orderList(state.orders),
+                _title(),
+                _orderList(),
               ],
             );
           }else{
@@ -71,13 +57,33 @@ class _MyOrderViewState extends State<MyOrdersView> {
     );
   }
 
-  Widget _orderList(List<Order> orders){
+  Widget _title(){
+    return Container(
+      margin: EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Mis pedidos', style: TextStyle(color: Colors.black, fontSize: 25.0, fontWeight: FontWeight.bold)),
+          IconButton(
+              icon: Icon(Icons.filter_list_outlined, color: Colors.teal[600]),
+              onPressed: (){
+                setState(() {
+                  _reverseList = !_reverseList;
+                });
+              }
+            )
+        ],
+      ), 
+    );
+  }
+
+  Widget _orderList(){
     return Expanded(
       child: ListView.separated(
         padding: EdgeInsets.only(top: 10.0),
-        itemCount: orders.length,
+        itemCount: _orders.length,
         itemBuilder: (BuildContext context, int i) { 
-          int index = (_reverseList)? (orders.length-1)-i : i;
+          int index = (_reverseList)? (_orders.length-1)-i : i;
           return ListTile(
             title: Text('Pedido #${index+1}', style: TextStyle(color: Colors.grey[800], fontSize: 18.0, fontWeight: FontWeight.bold),),
             subtitle: GestureDetector(

@@ -57,7 +57,7 @@ class _OrderViewState extends State<OrderView> {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.only(top:30.0),
+          margin: EdgeInsets.only(top:30.0, bottom: 15.0),
           padding: EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
             children: [

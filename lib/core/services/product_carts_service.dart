@@ -13,9 +13,9 @@ class ProductCartsService {
 
   Future<void> addProductsCart(List<ProductCart> productsCart) async{
     WriteBatch batch = _firestore.batch();
-    for (ProductCart product in productsCart) {
+    for (ProductCart productCart in productsCart) {
       DocumentReference doc = _productCarts.doc();
-      batch.set(doc, product.toMap());
+      batch.set(doc, productCart.toMap());
     }
     return batch.commit();
   }

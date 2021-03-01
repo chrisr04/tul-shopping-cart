@@ -19,13 +19,12 @@ class ProductService {
     return [];
   }
 
-  Future getProductsByIds(List<String> producIds) async{
-    QuerySnapshot snapshot = await _products.where('id', whereIn: producIds).orderBy('name').get();
-    if(snapshot.docs.isNotEmpty){
-      List<Product> products = snapshot.docs.map((doc) => Product.fromMap(doc.data())).toList();
-      return products;
+  Future<Product> getProductById(String id) async{
+    DocumentSnapshot snapshot = await _products.doc(id).get();
+    if(snapshot.exists){
+      return Product.fromMap(snapshot.data());
     }
-    return [];
+    return null;
   }
   
 }
