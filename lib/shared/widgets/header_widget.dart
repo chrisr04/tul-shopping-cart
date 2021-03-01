@@ -28,7 +28,7 @@ class Header extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
-            offset: Offset(0,5),
+            offset: Offset(0,2),
             blurRadius: 5.0
           )
         ],

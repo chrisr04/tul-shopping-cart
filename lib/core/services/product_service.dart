@@ -19,7 +19,7 @@ class ProductService {
     return [];
   }
 
-  Future getManyProducts(List<String> producIds) async{
+  Future getProductsByIds(List<String> producIds) async{
     QuerySnapshot snapshot = await _products.where('id', whereIn: producIds).orderBy('name').get();
     if(snapshot.docs.isNotEmpty){
       List<Product> products = snapshot.docs.map((doc) => Product.fromMap(doc.data())).toList();

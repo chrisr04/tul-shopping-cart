@@ -7,13 +7,12 @@ class OrderState {
   final bool exist;
 
   OrderState({
-    List<Order> orders,
+    List<Order> orders
   }): this.orders = orders?? [],
       this.exist = (orders != null)? true : false;
 
   OrderState copyWith({
-    List<Order> orders,
-    bool isLoading
+    List<Order> orders
   }) => OrderState(
     orders: orders?? this.orders
   );

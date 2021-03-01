@@ -11,7 +11,7 @@ class ProductCartsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _productCarts = FirebaseFirestore.instance.collection('product_carts');
 
-  Future<void> addProductCart(List<ProductCart> productsCart) async{
+  Future<void> addProductsCart(List<ProductCart> productsCart) async{
     WriteBatch batch = _firestore.batch();
     for (ProductCart product in productsCart) {
       DocumentReference doc = _productCarts.doc();

@@ -41,12 +41,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   }
 
   Stream<OrderState> _onLoadProducts(OnLoadProductsOrder event) async*{
-    yield state.copyWith(isLoading: true);
     try {
       List<Order> orders = state.orders;
       List<ProductCart> productCarts = await _productCartsService.getProductsCart(orders[event.index].cartId);
       List<String> ids = productCarts.map((p) => p.productId).toList();
-      List<Product> products = await _productService.getManyProducts(ids);
+      List<Product> products = await _productService.getProductsByIds(ids);
       List<Map<String, dynamic>> records = [];
       for (int i = 0; i < products.length; i++) {
         final productCart = productCarts.firstWhere((pc) => pc.productId == products[i].id);
@@ -56,7 +55,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         });
       }
       orders[event.index] = orders[event.index].copyWith(records: records);
-      yield state.copyWith(orders: orders, isLoading: false);
+      yield state.copyWith(orders: orders);
     } catch (e) {
       throw e;
     }

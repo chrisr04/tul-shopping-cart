@@ -4,9 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tul_shopping_cart/core/models/cart_model.dart';
 import 'package:tul_shopping_cart/core/models/product_cart_model.dart';
+import 'package:tul_shopping_cart/core/models/product_model.dart';
 import 'package:tul_shopping_cart/core/services/cart_service.dart';
 import 'package:tul_shopping_cart/core/services/product_carts_service.dart';
 import 'package:tul_shopping_cart/core/services/local_storage_service.dart';
+import 'package:tul_shopping_cart/core/services/product_service.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -14,6 +16,7 @@ part 'cart_state.dart';
 class CartBloc extends Bloc<CartEvent, CartState> {
 
   CartService _cartService = CartService();
+  ProductService _productService = ProductService();
   ProductCartsService _productCartsService = ProductCartsService();
   LocalStorageService _localStorageService = LocalStorageService();
 
@@ -25,6 +28,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       return true;
     }
     return false;
+  }
+
+  Future<List<Product>> getProducts() async{
+    List<String> ids = state.productsCart.map((pc) => pc.productId).toList();
+    if(ids.isNotEmpty){
+      List<Product> products = await _productService.getProductsByIds(ids);
+      return products;
+    }
+    return [];
   }
 
   Future<void> _saveLocalData(List<ProductCart> products) async{
@@ -106,7 +118,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     yield state.copyWith(isLoading: true);
     try {
       await _cartService.completeCart(state.cart);
-      await _productCartsService.addProductCart(state.productsCart);
+      await _productCartsService.addProductsCart(state.productsCart);
       await _localStorageService.remove('tul_shopping_cart');
       yield CartState.complete();
       add(OnInitCart());

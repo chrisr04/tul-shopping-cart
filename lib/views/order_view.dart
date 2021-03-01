@@ -95,7 +95,7 @@ class _OrderViewState extends State<OrderView> {
         color: Colors.teal[600].withOpacity(0.3)
       ),
       child: Center(
-        child: Text('Este pedido fue realizado con éxito', style: TextStyle(color: Colors.teal[600])),
+        child: Text('Este pedido fue realizado con éxito', style: TextStyle(color: Colors.teal[600], fontWeight: FontWeight.bold)),
       ),
     );
   }

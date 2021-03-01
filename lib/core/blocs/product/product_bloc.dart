@@ -16,7 +16,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
 
   Future<List<Product>> getProducts(List<String> ids) async{
-    List<Product> products = await _productService.getManyProducts(ids);
+    List<Product> products = await _productService.getProductsByIds(ids);
     return products;
   }
 
