@@ -1,3 +1,3 @@
-# Tül Shopping Cart
+# Shopping Cart
 
-Prueba de vacante para desarrollador mobile con flutter.
+Pequeño carrito de compras hecho en flutter.
