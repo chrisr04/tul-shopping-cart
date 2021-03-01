@@ -16,20 +16,19 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        child: Column(
-          children: [
-            Text(product.name, textAlign: TextAlign.start,  maxLines: 3, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.teal[600], fontSize: 20.0, fontWeight: FontWeight.bold)),
-            SizedBox(height: 5.0),
-            Text(product.description, textAlign: TextAlign.start, overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(color: Colors.grey[600])),
-            Expanded(child: SizedBox(height: 5.0)),
-            _addCartBtn(context),
-            _showDetailsBtn(context)
-          ],
-        )
-      ),
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+      child: Column(
+        children: [
+          Text(product.name, textAlign: TextAlign.start,  maxLines: 3, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.teal[600], fontSize: 20.0, fontWeight: FontWeight.bold)),
+          SizedBox(height: 5.0),
+          Text(product.description, textAlign: TextAlign.start, overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(color: Colors.grey[600])),
+          Expanded(child: SizedBox(height: 5.0)),
+          _addCartBtn(context),
+          _showDetailsBtn(context)
+        ],
+      )
     );
   }
 

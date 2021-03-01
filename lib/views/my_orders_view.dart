@@ -103,7 +103,13 @@ class _MyOrderViewState extends State<MyOrdersView> {
               backgroundColor: Colors.teal[600]
             ),
           );
-        }, separatorBuilder: (BuildContext context, int index) => Divider(),
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 15.0),
+            child: Divider()
+          ); 
+        }
       ),
     );
   }

@@ -12,6 +12,7 @@ void showOrderLoadingAlert(BuildContext context){
         height: 40.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Loader(
               size: 25.0,
@@ -19,7 +20,9 @@ void showOrderLoadingAlert(BuildContext context){
               secondaryColor: Colors.white,
             ),
             SizedBox(width: 15.0),
-            Text('Procesando tu pedido...', style: TextStyle(color: Colors.grey[600], fontSize: 16.0, fontWeight: FontWeight.bold))
+            Expanded(
+              child: Text('Procesando pedido...', overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.grey[600], fontSize: 16.0, fontWeight: FontWeight.bold))
+            )
           ],
         ),
       )
@@ -33,14 +36,16 @@ void showOrderSuccessAlert(BuildContext context){
     context: context,
     builder: (BuildContext context) => AlertDialog(
       content: Container(
-        height: 100.0,
+        height: 90.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(Icons.check_circle_outline_rounded, size: 60.0, color: Colors.teal[600]),
             SizedBox(height: 5.0),
-            Text('¡La orden se creó correctamente!', style: TextStyle(color: Colors.grey[600], fontSize: 18.0, fontWeight: FontWeight.bold))
+            Expanded(
+              child: Text('¡Pedido realizado!', overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[600], fontSize: 18.0, fontWeight: FontWeight.bold))
+            )
           ],
         ),
       ),
